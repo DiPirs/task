@@ -1,0 +1,90 @@
+/* == wrapper == */
+.control__wrapper {
+  max-width: var(--layout-window);
+
+  margin: 0 auto;
+  padding: 20px;
+
+  display: flex;
+  gap: 50px;
+  justify-content: center;
+}
+
+/* == contener == */
+.contener{
+  display: flex;
+  gap: 20px;
+}
+
+.contener__block{
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+/* == block == */
+.block__header {
+  font-size: 40px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.block__items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  margin-top: 10px;
+}
+
+.contener_block__items{
+  max-height: 300px;
+  overflow: auto;
+}
+
+.items-li{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 5px;
+
+  cursor: pointer;
+}
+
+.items-li:hover{
+  background-color: var(--color-hover);
+}
+
+.items-li.active {
+  background-color: var(--color-choise);
+}
+
+.search-input{
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.item-img{
+  max-width: 70px;
+  border-radius: 10px;
+}
+
+/* == buttons == */
+.buttons__items{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 40px;
+}
+
+.buttons-item{
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.buttons-item:hover {
+  background-color: var(--color-hover);
+}
