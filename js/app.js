@@ -394,14 +394,15 @@ function Control(itemsData){
 
   function rightToLeftAll(){
     let getUl = document.querySelector('.itmes-selected');
+    let contLen = contenerAvaliable.length;
     for (let i = 0; i < contenerSelect.length; ++i){
       let elemet = document.querySelector('.li-s');
       contenerAvaliable.push(contenerSelect[i]);
       getUl.removeChild(elemet)
     }
 
-    for (let j = 0; j < contenerSelect.length; ++j){
-      fillAvaliableItems(contenerSelect, j); 
+    for (let j = contLen; j < contenerSelect.length + contLen; ++j){
+      fillAvaliableItems(contenerAvaliable, j); 
     }  
     contenerSelect.splice(0, contenerSelect.length);
   }
