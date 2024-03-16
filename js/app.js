@@ -168,12 +168,11 @@ function Control(itemsData){
   function getElemBySearch(inputSearch,contener, ulSelec, liSelec){
     let searchValue = inputSearch.value.toLowerCase();
     let countToDel = searchElemArr.length;
+    let getUl = document.querySelector(`.${ulSelec}`);
     
     if (searchElemArr.length === 0){
       countToDel = contener.length;
     }
-
-    let getUl = document.querySelector(`.${ulSelec}`);
 
     for (let i = 0; i < countToDel; ++i){
       let elem = document.querySelector(`.${liSelec}`);
