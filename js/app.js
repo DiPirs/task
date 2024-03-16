@@ -162,7 +162,7 @@ function Control(itemsData){
   
   for (let i = 0; i < itemsData.lengthObj; ++i){
     contenerAvaliable[i] = itemsData['item' + (i + 1)];
-    fillAvaliableItems(contenerAvaliable, i);
+    fillItems(contenerAvaliable, i, 'li-a');
   }
 
   function getElemBySearch(inputSearch,contener, ulSelec, liSelec){
@@ -192,11 +192,11 @@ function Control(itemsData){
     }
 
     if (ulSelec === 'itmes-available'){
-      fillAvaliableItems(searchElemArr);
+      fillItems(searchElemArr);
     }
     else{
       for (let i = 0; i < searchElemArr.length; ++i){
-        fillSelectedItems(searchElemArr, i);
+        fillItems(searchElemArr, i);
       }
     }
 
@@ -215,32 +215,24 @@ function Control(itemsData){
     }
   }
   
-  function fillAvaliableItems(contener,index){
-    let getUl = document.querySelector('.itmes-available');
-    let createElemLi = document.createElement('li');
-    createElemLi.classList.add('items-li');
-    createElemLi.classList.add('li-a');
-    createElemLi.innerHTML = fillElem(contener[index]);
-    createElemLi.addEventListener('click', function(){
-      document.querySelectorAll(".items-li").forEach((itemLi) => { itemLi.classList.remove("active"); });
-      createElemLi.classList.add("active");
-    })
-    getUl.appendChild(createElemLi);
-  }
+  function fillItems(contener, index, classLi){
+    let getUl;
+    if (classLi === 'li-a'){
+      getUl = document.querySelector('.itmes-available');
+    }
+    else{
+      getUl = document.querySelector('.itmes-selected');
+    }
 
-  function fillSelectedItems(contener,index){
-    let getUl = document.querySelector('.itmes-selected');
-  
     let createElemLi = document.createElement('li');
     createElemLi.classList.add('items-li');
-    createElemLi.classList.add('li-s');
+    createElemLi.classList.add(`${classLi}`);
     createElemLi.innerHTML = fillElem(contener[index]);
     createElemLi.addEventListener('click', function(){
       document.querySelectorAll(".items-li").forEach((itemLi) => { itemLi.classList.remove("active"); });
       createElemLi.classList.add("active");
     })
     getUl.appendChild(createElemLi);
-    
   }
 
   function upQueue(contener){
@@ -352,7 +344,7 @@ function Control(itemsData){
       if (contenerAvaliable[i].name === elemet.lastElementChild.innerHTML){
         contenerSelect.push(contenerAvaliable[i]);
         contenerAvaliable.splice(i, 1);
-        fillSelectedItems(contenerSelect,contenerSelect.length - 1);
+        fillItems(contenerSelect,contenerSelect.length - 1, 'li-s');
         perentUl.removeChild(elemet);
         return;
       }
@@ -370,7 +362,7 @@ function Control(itemsData){
       if (contenerSelect[i].name === elemet.lastElementChild.innerHTML){
         contenerAvaliable.push(contenerSelect[i]);
         contenerSelect.splice(i, 1);   
-        fillAvaliableItems(contenerAvaliable,contenerAvaliable.length - 1);
+        fillItems(contenerAvaliable,contenerAvaliable.length - 1, 'li-a');
         perentUl.removeChild(elemet);
         return;
       }
@@ -387,7 +379,7 @@ function Control(itemsData){
     }
 
     for (let j = contLen; j < contenerAvaliable.length + contLen; ++j){
-      fillSelectedItems(contenerSelect, j); 
+      fillItems(contenerSelect, j, 'li-s'); 
     }
     contenerAvaliable.splice(0, contenerAvaliable.length);
   }
@@ -402,7 +394,7 @@ function Control(itemsData){
     }
 
     for (let j = contLen; j < contenerSelect.length + contLen; ++j){
-      fillAvaliableItems(contenerAvaliable, j); 
+      fillItems(contenerAvaliable, j, 'li-a'); 
     }  
     contenerSelect.splice(0, contenerSelect.length);
   }
@@ -411,7 +403,7 @@ function Control(itemsData){
     contenerAvaliable.push({
       name : `Random Item #${Math.floor(Math.random() * 100)}`
     });
-    fillAvaliableItems(contenerAvaliable, contenerAvaliable.length - 1);
+    fillItems(contenerAvaliable, contenerAvaliable.length - 1, 'li-a');
   }
 
   function resetAll(){
@@ -423,7 +415,7 @@ function Control(itemsData){
     contenerSelect = [];
     for (let i = 0; i < itemsData.lengthObj; ++i){
       contenerAvaliable[i] = itemsData['item' + (i + 1)];
-      fillAvaliableItems(contenerAvaliable, i);
+      fillItems(contenerAvaliable, i, 'li-a');
     }
   }
 }
