@@ -118,9 +118,9 @@ function createControl(itemsData){
   const wrapper = document.querySelector('.control__wrapper');
   wrapper.innerHTML = leftSide + centerSide + rigthSide;
 
-  const contenerAvaliable = [];
-  const contenerSelect = [];
-  const searchElemArr = [];
+  let contenerAvaliable = [];
+  let contenerSelect = [];
+  let searchElemArr = [];
 
   const inputSearchAvailable = document.querySelector('.input-available');
   const inputSearchSelected = document.querySelector('.input-selected');
@@ -147,7 +147,7 @@ function createControl(itemsData){
 
   const buttonReset = document.querySelector('.button-reset');
   const buttonRanom = document.querySelector('.button-random');
-  // buttonReset.addEventListener('click', resetAll); 
+  buttonReset.addEventListener('click', resetAll); 
   buttonRanom.addEventListener('click', randItem); 
 
   const buttonUpSe = document.querySelector('.button-up-s');
@@ -161,6 +161,7 @@ function createControl(itemsData){
   
   for (let i = 0; i < itemsData.lengthObj; ++i){
     contenerAvaliable[i] = itemsData['item' + (i + 1)];
+    fillAvaliableItems(contenerAvaliable, i);
   }
 
   function getElemBySearch(inputSearch,contener, ulSelec, liSelec){
@@ -224,10 +225,6 @@ function createControl(itemsData){
       createElemLi.classList.add("active");
     })
     getUl.appendChild(createElemLi);
-  }
-
-  for (let i = 0; i < contenerAvaliable.length; ++i){
-    fillAvaliableItems(contenerAvaliable, i);
   }
 
   function fillSelectedItems(contener,index){
@@ -413,6 +410,19 @@ function createControl(itemsData){
       name : `Random Item #${Math.floor(Math.random() * 100)}`
     });
     fillAvaliableItems(contenerAvaliable, contenerAvaliable.length - 1);
+  }
+
+  function resetAll(){
+    let getItems = document.querySelectorAll(".items-li");
+		for (let elem of getItems) {
+			elem.remove();
+		}
+    contenerAvaliable = [];
+    contenerSelect = [];
+    for (let i = 0; i < itemsData.lengthObj; ++i){
+      contenerAvaliable[i] = itemsData['item' + (i + 1)];
+      fillAvaliableItems(contenerAvaliable, i);
+    }
   }
 }
 
