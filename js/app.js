@@ -193,15 +193,23 @@ function createControl(itemsData){
     if (elemet === null){
       return;
     }
-    let parent = elemet.parentElement;
+
     for (let i = 0; i < contenerAvaliable.length; ++i){
       if (contenerAvaliable[i].name === elemet.lastElementChild.innerHTML && i != 0){
-        let test = contenerAvaliable[0];
-        contenerAvaliable[0] = contenerAvaliable[i];
-        elemet.innerHTML = parent.firstElementChild.innerHTML;
-        parent.firstElementChild.innerHTML = fillElem(i);
-        elemet.classList.remove("active");
-        contenerAvaliable[i] = test;
+        let temp = contenerAvaliable[i];
+
+        for (let j = i; j > 0; --j){
+          contenerAvaliable[j] = contenerAvaliable[j - 1];
+        }
+        contenerAvaliable[0] = temp;
+        
+        for (let k = 0; k < contenerAvaliable.length; ++k){
+          let liElement = document.querySelectorAll(".items-li")[k];
+          let data = fillElem(k);
+          liElement.innerHTML = data;
+          liElement.classList.remove('active');
+        }
+        return;
       }
     }
   }
