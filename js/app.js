@@ -152,6 +152,10 @@ function createControl(itemsData){
   buttonDownSe.addEventListener('click',() => downQueue(contenerSelect));
   buttonDubleDownSe.addEventListener('click',() => downQueueToFirst(contenerSelect));
   
+  for (let i = 0; i < itemsData.lengthObj; ++i){
+    contenerAvaliable[i] = itemsData['item' + (i + 1)];
+  }
+
   function getElemBySearch(inputSearch,contener, ulSelec, liSelec){
     let searchValue = inputSearch.value.toLowerCase();
     let countToDel = searchElemArr.length;
@@ -161,18 +165,19 @@ function createControl(itemsData){
     }
 
     let getUl = document.querySelector(`.${ulSelec}`);
-    console.log(getUl);
 
     for (let i = 0; i < countToDel; ++i){
       let elem = document.querySelector(`.${liSelec}`);
-      getUl.removeChild(elem);
+      if ( elem != null){
+        getUl.removeChild(elem);
+      }
     }
 
     searchElemArr.splice(0, searchElemArr.length);
 
     for (let i = 0; i < contener.length; ++i){
-      let test = hasChar(contener[i].name, searchValue)
-      if (test === true){
+      let isHas = hasChar(contener[i].name, searchValue)
+      if (isHas === true){
         searchElemArr.push(contener[i]);    
       }
     }
@@ -183,7 +188,6 @@ function createControl(itemsData){
     else{
       for (let i = 0; i < searchElemArr.length; ++i){
         fillSelectedItems(searchElemArr, i);
-        console.log(searchElemArr);
       }
     }
 
@@ -191,10 +195,6 @@ function createControl(itemsData){
 
   function hasChar(str, char) {
       return str.includes(char)
-  }
-
-  for (let i = 0; i < itemsData.lengthObj; ++i){
-    contenerAvaliable[i] = itemsData['item' + (i + 1)];
   }
 
   function fillElem(contener){
@@ -205,37 +205,23 @@ function createControl(itemsData){
       <span class="items__text">${contener.name}</span>`
   }
   
-  function fillAvaliableItems(contener,index = null){
+  function fillAvaliableItems(contener,index){
     let getUl = document.querySelector('.itmes-available');
-
-    if (index === null){
-      for (let i = 0; i < contener.length; ++i){
-        console.log(contener.length);
-        let createElemLi = document.createElement('li');
-        createElemLi.classList.add('items-li');
-        createElemLi.classList.add('li-a');
-        createElemLi.innerHTML = fillElem(contener[i]);
-        createElemLi.addEventListener('click', function(){
-          document.querySelectorAll(".items-li").forEach((itemLi) => { itemLi.classList.remove("active"); });
-          createElemLi.classList.add("active");
-        })
-        getUl.appendChild(createElemLi);
-      }
-    }
-    else{
-      let createElemLi = document.createElement('li');
-      createElemLi.classList.add('items-li');
-      createElemLi.classList.add('li-a');
-      createElemLi.innerHTML = fillElem(contener[index]);
-      createElemLi.addEventListener('click', function(){
-        document.querySelectorAll(".items-li").forEach((itemLi) => { itemLi.classList.remove("active"); });
-        createElemLi.classList.add("active");
-      })
-      getUl.appendChild(createElemLi);
-    }
+    let createElemLi = document.createElement('li');
+    createElemLi.classList.add('items-li');
+    createElemLi.classList.add('li-a');
+    createElemLi.innerHTML = fillElem(contener[index]);
+    createElemLi.addEventListener('click', function(){
+      document.querySelectorAll(".items-li").forEach((itemLi) => { itemLi.classList.remove("active"); });
+      createElemLi.classList.add("active");
+    })
+    getUl.appendChild(createElemLi);
   }
 
-  fillAvaliableItems(contenerAvaliable);
+  for (let i = 0; i < contenerAvaliable.length; ++i){
+    fillAvaliableItems(contenerAvaliable, i);
+  }
+
 
   function fillSelectedItems(contener,index){
     let getUl = document.querySelector('.itmes-selected');
@@ -363,6 +349,8 @@ function createControl(itemsData){
         contenerAvaliable.splice(i, 1);
         fillSelectedItems(contenerSelect,contenerSelect.length - 1);
         perentUl.removeChild(elemet);
+        console.log(contenerSelect);
+        console.log(contenerAvaliable);
         return;
       }
     }
@@ -381,6 +369,8 @@ function createControl(itemsData){
         contenerSelect.splice(i, 1);   
         fillAvaliableItems(contenerAvaliable,contenerAvaliable.length - 1);
         perentUl.removeChild(elemet);
+        console.log(contenerAvaliable.length);
+        console.log(contenerSelect.length);
         return;
       }
     }
@@ -388,11 +378,15 @@ function createControl(itemsData){
 
   function leftToRightAll(){
     let getUl = document.querySelector('.itmes-available');
+    let contLen = contenerSelect.length;
     for (let i = 0; i < contenerAvaliable.length; ++i){
       let elemet = document.querySelector('.li-a');
       contenerSelect.push(contenerAvaliable[i]);
-      fillSelectedItems(contenerSelect,i); 
-      getUl.removeChild(elemet)
+      getUl.removeChild(elemet);
+    }
+
+    for (let j = contLen; j < contenerAvaliable.length + contLen; ++j){
+      fillSelectedItems(contenerSelect, j); 
     }
     contenerAvaliable.splice(0, contenerAvaliable.length);
   }
@@ -402,9 +396,13 @@ function createControl(itemsData){
     for (let i = 0; i < contenerSelect.length; ++i){
       let elemet = document.querySelector('.li-s');
       contenerAvaliable.push(contenerSelect[i]);
+      console.log(contenerAvaliable);
       getUl.removeChild(elemet)
     }
-    fillAvaliableItems(contenerAvaliable); 
+
+    for (let j = 0; j < contenerSelect.length; ++j){
+      fillAvaliableItems(contenerSelect, j); 
+    }  
     contenerSelect.splice(0, contenerSelect.length);
   }
 }

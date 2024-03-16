@@ -38,7 +38,7 @@
 }
 
 .contener_block__items{
-  max-height: 300px;
+  height: 300px;
   overflow: auto;
 }
 
