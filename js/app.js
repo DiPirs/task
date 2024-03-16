@@ -126,7 +126,7 @@ function createControl(itemsData){
   buttonUpAv.addEventListener('click', upQueue);
   buttonDubleUpAv.addEventListener('click', upQueueToFirst);
   buttonDownAv.addEventListener('click', downQueue);
-  buttonDubleDownAv.addEventListener('click', downQueue);
+  buttonDubleDownAv.addEventListener('click', downQueueToFirst);
 
   const buttonUpSe = document.querySelector('.button-up-s');
   const buttonDubleUpSe = document.querySelector('.button-doubUp-s');
@@ -169,10 +169,11 @@ function createControl(itemsData){
 
   function upQueue(){
     let elemet = document.querySelector('.active');
-    if (elemet === null){
+    let aboveElemet = elemet.previousSibling;
+
+    if (elemet === null && aboveElemet === null){
       return;
     }
-    let aboveElemet = elemet.previousSibling;
 
     for (let i = 0; i < contenerAvaliable.length; ++i){
       if (contenerAvaliable[i].name === elemet.lastElementChild.innerHTML && i != 0){
@@ -215,7 +216,53 @@ function createControl(itemsData){
   }
   
   function downQueue(){
-    console.log('22');
+    let elemet = document.querySelector('.active');
+    let belowElemet = elemet.nextSibling;
+
+    if (elemet === null && belowElemet === null){
+      return;
+    }
+
+    for (let i = 0; i < contenerAvaliable.length; ++i){
+      if (contenerAvaliable[i].name === elemet.lastElementChild.innerHTML && i != contenerAvaliable.length - 1){
+        let oldElemet = elemet.innerHTML;
+        let oldBelowPosition = contenerAvaliable[i + 1];
+        
+        contenerAvaliable[i + 1] = contenerAvaliable[i]
+        contenerAvaliable[i] = oldBelowPosition;
+        elemet.innerHTML = belowElemet.innerHTML;
+        belowElemet.innerHTML = oldElemet;
+        elemet.classList.remove("active");
+        return;
+      }
+    }
+
+  }
+
+  function downQueueToFirst(){
+    let elemet = document.querySelector('.active');
+    if (elemet === null){
+      return;
+    }
+
+    for (let i = 0; i < contenerAvaliable.length; ++i){
+      if (contenerAvaliable[i].name === elemet.lastElementChild.innerHTML && i != contenerAvaliable.length - 1){
+        let temp = contenerAvaliable[i];
+
+        for (let j = i; j < contenerAvaliable.length - i; ++j){
+          contenerAvaliable[j] = contenerAvaliable[j + 1];
+        }
+        contenerAvaliable[contenerAvaliable.length - 1] = temp
+        
+        for (let k = 0; k < contenerAvaliable.length; ++k){
+          let liElement = document.querySelectorAll(".items-li")[k];
+          let data = fillElem(k);
+          liElement.innerHTML = data;
+          liElement.classList.remove('active');
+        }
+        return;
+      }
+    }
   }
 }
 
