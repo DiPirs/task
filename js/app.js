@@ -57,7 +57,7 @@ function createControl(itemsData){
       </div>
       <hr/>
       <div class="contener_block__items">
-        <ul class="block__items"></ul>
+        <ul class="block__items itmes-available"></ul>
       </div>
     </div>
   </div>`;
@@ -92,7 +92,7 @@ function createControl(itemsData){
         </div>
         <hr/>
         <div class="contener_block__items">
-          <ul class="block__items"></ul>
+          <ul class="block__items itmes-selected"></ul>
         </div>
       </div>
       <div class="contener__buttons">
@@ -128,44 +128,79 @@ function createControl(itemsData){
   buttonDownAv.addEventListener('click', downQueue);
   buttonDubleDownAv.addEventListener('click', downQueueToFirst);
 
+  const buttonLeft = document.querySelector('.button-left');
+  const buttonDubleLeft = document.querySelector('.button-doubLeft');
+  const buttonDubleRight = document.querySelector('.button-doubRight');
+  const buttonRight = document.querySelector('.button-right');
+  buttonLeft.addEventListener('click', rightToLeft); 
+  buttonDubleLeft.addEventListener('click', rightToLeftAll);
+
+  buttonDubleRight.addEventListener('click', leftToRightAll); 
+  buttonRight.addEventListener('click', leftToRight);
+
   const buttonUpSe = document.querySelector('.button-up-s');
   const buttonDubleUpSe = document.querySelector('.button-doubUp-s');
   const buttonDownSe = document.querySelector('.button-down-s');
   const buttonDubleDownSe = document.querySelector('.button-doubDown-s');
 
-  const buttonLeft = document.querySelector('.button-left');
-  const buttonDubleLeft = document.querySelector('.button-doubLeft');
-  const buttonDubleRight = document.querySelector('.button-doubRight');
-  const buttonRight = document.querySelector('.button-right');
 
   for (let i = 0; i < itemsData.lengthObj; ++i){
     contenerAvaliable[i] = itemsData['item' + (i + 1)];
   }
 
-  function fillElem(i){
+  function fillElem(contener){
     return `
       <div class="items__img">
-        <img src="${contenerAvaliable[i].img}" alt="${contenerAvaliable[i].img} image" class="item-img">
+        <img src="${contener.img}" alt="${contener.img} image" class="item-img">
       </div>
-      <span class="items__text">${contenerAvaliable[i].name}</span>`
+      <span class="items__text">${contener.name}</span>`
   }
   
-  function fillAvaliableItems(){
-    let getUl = document.querySelector('.block__items');
-    
-    for (let i = 0; i < contenerAvaliable.length; ++i){
+  function fillAvaliableItems(index = null){
+    let getUl = document.querySelector('.itmes-available');
+
+    if (index === null){
+      for (let i = 0; i < contenerAvaliable.length; ++i){
+        let createElemLi = document.createElement('li');
+        createElemLi.classList.add('items-li');
+        createElemLi.classList.add('li-a');
+        createElemLi.innerHTML = fillElem(contenerAvaliable[i]);
+        createElemLi.addEventListener('click', function(){
+          document.querySelectorAll(".items-li").forEach((itemLi) => { itemLi.classList.remove("active"); });
+          createElemLi.classList.add("active");
+        })
+        getUl.appendChild(createElemLi);
+      }
+    }
+    else{
       let createElemLi = document.createElement('li');
       createElemLi.classList.add('items-li');
-      createElemLi.innerHTML = fillElem(i);
+      createElemLi.classList.add('li-a');
+      createElemLi.innerHTML = fillElem(contenerAvaliable[index]);
       createElemLi.addEventListener('click', function(){
         document.querySelectorAll(".items-li").forEach((itemLi) => { itemLi.classList.remove("active"); });
-			  createElemLi.classList.add("active");
+        createElemLi.classList.add("active");
       })
       getUl.appendChild(createElemLi);
     }
   }
 
   fillAvaliableItems();
+
+  function fillSelectedItems(index){
+    let getUl = document.querySelector('.itmes-selected');
+  
+    let createElemLi = document.createElement('li');
+    createElemLi.classList.add('items-li');
+    createElemLi.classList.add('li-s');
+    createElemLi.innerHTML = fillElem(contenerSelect[index]);
+    createElemLi.addEventListener('click', function(){
+      document.querySelectorAll(".items-li").forEach((itemLi) => { itemLi.classList.remove("active"); });
+      createElemLi.classList.add("active");
+    })
+    getUl.appendChild(createElemLi);
+    
+  }
 
   function upQueue(){
     let elemet = document.querySelector('.active');
@@ -206,7 +241,7 @@ function createControl(itemsData){
         
         for (let k = 0; k < contenerAvaliable.length; ++k){
           let liElement = document.querySelectorAll(".items-li")[k];
-          let data = fillElem(k);
+          let data = fillElem(contenerAvaliable[k]);
           liElement.innerHTML = data;
           liElement.classList.remove('active');
         }
@@ -227,7 +262,7 @@ function createControl(itemsData){
       if (contenerAvaliable[i].name === elemet.lastElementChild.innerHTML && i != contenerAvaliable.length - 1){
         let oldElemet = elemet.innerHTML;
         let oldBelowPosition = contenerAvaliable[i + 1];
-        
+
         contenerAvaliable[i + 1] = contenerAvaliable[i]
         contenerAvaliable[i] = oldBelowPosition;
         elemet.innerHTML = belowElemet.innerHTML;
@@ -256,13 +291,71 @@ function createControl(itemsData){
         
         for (let k = 0; k < contenerAvaliable.length; ++k){
           let liElement = document.querySelectorAll(".items-li")[k];
-          let data = fillElem(k);
+          let data = fillElem(contenerAvaliable[k]);
           liElement.innerHTML = data;
           liElement.classList.remove('active');
         }
         return;
       }
     }
+  }
+
+  function leftToRight(){
+    let elemet = document.querySelector('.active');
+    if (elemet === null){
+      return;
+    }
+    let perentUl = elemet.parentElement;
+
+    for (let i = 0; i < contenerAvaliable.length; ++i){
+      if (contenerAvaliable[i].name === elemet.lastElementChild.innerHTML){
+        contenerSelect.push(contenerAvaliable[i]);
+        contenerAvaliable.splice(i, 1);
+        fillSelectedItems(contenerSelect.length - 1);
+        perentUl.removeChild(elemet);
+        return;
+      }
+    }
+  }
+
+  function rightToLeft(){
+    let elemet = document.querySelector('.active');
+    if (elemet === null){
+      return;
+    }
+    let perentUl = elemet.parentElement;
+
+    for (let i = 0; i < contenerSelect.length; ++i){
+      if (contenerSelect[i].name === elemet.lastElementChild.innerHTML){
+        contenerAvaliable.push(contenerSelect[i]);
+        contenerSelect.splice(i, 1);   
+        fillAvaliableItems(contenerAvaliable.length - 1);
+        perentUl.removeChild(elemet);
+        return;
+      }
+    }
+  }
+
+  function leftToRightAll(){
+    let getUl = document.querySelector('.itmes-available');
+    for (let i = 0; i < contenerAvaliable.length; ++i){
+      let elemet = document.querySelector('.li-a');
+      contenerSelect.push(contenerAvaliable[i]);
+      fillSelectedItems(i); 
+      getUl.removeChild(elemet)
+    }
+    contenerAvaliable.splice(0, contenerAvaliable.length);
+  }
+
+  function rightToLeftAll(){
+    let getUl = document.querySelector('.itmes-selected');
+    for (let i = 0; i < contenerSelect.length; ++i){
+      let elemet = document.querySelector('.li-s');
+      contenerAvaliable.push(contenerSelect[i]);
+      getUl.removeChild(elemet)
+    }
+    fillAvaliableItems(); 
+    contenerSelect.splice(0, contenerSelect.length);
   }
 }
 
