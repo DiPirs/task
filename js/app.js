@@ -68,16 +68,18 @@ function createControl(itemsData){
         <ul class="buttons__items">
           <button class="buttons-item button-left">
               <img src="./icons/left.svg" alt="Transfer from Select to Avaliable 1 item" class="button-img img-left">
-            </button>
-            <button class="buttons-item button-doubLeft">
-              <img src="./icons/doubleLeft.svg" alt="Transfer from Select to Avaliable all items" class="button-img img-dobLeft">
-            </button>
-            <button class="buttons-item button-doubRight">
-              <img src="./icons/doubleRight.svg" alt="Transfer from Avaliable to Select all items" class="button-img img-dobRight">
-            </button>
-            <button class="buttons-item button-right">
-              <img src="./icons/right.svg" alt="Transfer from Avaliable to Select 1 item" class="button-img img-right">
-            </button>
+          </button>
+          <button class="buttons-item button-doubLeft">
+            <img src="./icons/doubleLeft.svg" alt="Transfer from Select to Avaliable all items" class="button-img img-dobLeft">
+          </button>
+          <button class="buttons-item button-doubRight">
+            <img src="./icons/doubleRight.svg" alt="Transfer from Avaliable to Select all items" class="button-img img-dobRight">
+          </button>
+          <button class="buttons-item button-right">
+            <img src="./icons/right.svg" alt="Transfer from Avaliable to Select 1 item" class="button-img img-right">
+          </button>
+          <button class="buttons-item button-reset">RESET</button>
+          <button class="buttons-item button-random">RANDOM</button>
         </ul>
       </nav>
     </div>`;
@@ -143,6 +145,11 @@ function createControl(itemsData){
   buttonDubleRight.addEventListener('click', leftToRightAll); 
   buttonRight.addEventListener('click', leftToRight);
 
+  const buttonReset = document.querySelector('.button-reset');
+  const buttonRanom = document.querySelector('.button-random');
+  // buttonReset.addEventListener('click', resetAll); 
+  buttonRanom.addEventListener('click', randItem); 
+
   const buttonUpSe = document.querySelector('.button-up-s');
   const buttonDubleUpSe = document.querySelector('.button-doubUp-s');
   const buttonDownSe = document.querySelector('.button-down-s');
@@ -198,11 +205,12 @@ function createControl(itemsData){
   }
 
   function fillElem(contener){
-    return `
-      <div class="items__img">
-        <img src="${contener.img}" alt="${contener.img} image" class="item-img">
-      </div>
-      <span class="items__text">${contener.name}</span>`
+    if (contener.img != null){
+      return `<div class="items__img"> <img src="${contener.img}" alt="${contener.img} image" class="item-img"></div> <span class="items__text">${contener.name}</span>`
+    }
+    else{
+      return `<span class="items__text">${contener.name}</span>`
+    }
   }
   
   function fillAvaliableItems(contener,index){
@@ -221,7 +229,6 @@ function createControl(itemsData){
   for (let i = 0; i < contenerAvaliable.length; ++i){
     fillAvaliableItems(contenerAvaliable, i);
   }
-
 
   function fillSelectedItems(contener,index){
     let getUl = document.querySelector('.itmes-selected');
@@ -349,8 +356,6 @@ function createControl(itemsData){
         contenerAvaliable.splice(i, 1);
         fillSelectedItems(contenerSelect,contenerSelect.length - 1);
         perentUl.removeChild(elemet);
-        console.log(contenerSelect);
-        console.log(contenerAvaliable);
         return;
       }
     }
@@ -369,8 +374,6 @@ function createControl(itemsData){
         contenerSelect.splice(i, 1);   
         fillAvaliableItems(contenerAvaliable,contenerAvaliable.length - 1);
         perentUl.removeChild(elemet);
-        console.log(contenerAvaliable.length);
-        console.log(contenerSelect.length);
         return;
       }
     }
@@ -396,7 +399,6 @@ function createControl(itemsData){
     for (let i = 0; i < contenerSelect.length; ++i){
       let elemet = document.querySelector('.li-s');
       contenerAvaliable.push(contenerSelect[i]);
-      console.log(contenerAvaliable);
       getUl.removeChild(elemet)
     }
 
@@ -404,6 +406,13 @@ function createControl(itemsData){
       fillAvaliableItems(contenerSelect, j); 
     }  
     contenerSelect.splice(0, contenerSelect.length);
+  }
+
+  function randItem(){
+    contenerAvaliable.push({
+      name : `Random Item #${Math.floor(Math.random() * 100)}`
+    });
+    fillAvaliableItems(contenerAvaliable, contenerAvaliable.length - 1);
   }
 }
 
