@@ -53,7 +53,7 @@ function createControl(itemsData){
       <h1 class="block__header">Available</h1>
       <hr/>
       <div class="block__search">
-        <input type="text" placeholder="Search item" class="search-input">
+        <input type="text" placeholder="Search item" class="search-input input-available">
       </div>
       <hr/>
       <div class="contener_block__items">
@@ -88,7 +88,7 @@ function createControl(itemsData){
         <h1 class="block__header">Selected</h1>
         <hr/>
         <div class="block__search">
-          <input type="text" placeholder="Search item" class="search-input">
+          <input type="text" placeholder="Search item" class="search-input input-selected">
         </div>
         <hr/>
         <div class="contener_block__items">
@@ -118,15 +118,21 @@ function createControl(itemsData){
 
   const contenerAvaliable = [];
   const contenerSelect = [];
+  const searchElemArr = [];
+
+  const inputSearchAvailable = document.querySelector('.input-available');
+  const inputSearchSelected = document.querySelector('.input-selected');
+  inputSearchAvailable.addEventListener('input', () => getElemBySearch(inputSearchAvailable,contenerAvaliable, 'itmes-available', 'li-a'));
+  inputSearchSelected.addEventListener('input', () => getElemBySearch(inputSearchSelected,contenerSelect, 'itmes-selected', 'li-s'));
 
   const buttonUpAv = document.querySelector('.button-up-a');
   const buttonDubleUpAv = document.querySelector('.button-doubUp-a');
   const buttonDownAv = document.querySelector('.button-down-a');
   const buttonDubleDownAv = document.querySelector('.button-doubDown-a');
-  buttonUpAv.addEventListener('click', upQueue);
-  buttonDubleUpAv.addEventListener('click', upQueueToFirst);
-  buttonDownAv.addEventListener('click', downQueue);
-  buttonDubleDownAv.addEventListener('click', downQueueToFirst);
+  buttonUpAv.addEventListener('click', () => upQueue(contenerAvaliable));
+  buttonDubleUpAv.addEventListener('click',() => upQueueToFirst(contenerAvaliable));
+  buttonDownAv.addEventListener('click', () => downQueue(contenerAvaliable));
+  buttonDubleDownAv.addEventListener('click', () => downQueueToFirst(contenerAvaliable));
 
   const buttonLeft = document.querySelector('.button-left');
   const buttonDubleLeft = document.querySelector('.button-doubLeft');
@@ -134,7 +140,6 @@ function createControl(itemsData){
   const buttonRight = document.querySelector('.button-right');
   buttonLeft.addEventListener('click', rightToLeft); 
   buttonDubleLeft.addEventListener('click', rightToLeftAll);
-
   buttonDubleRight.addEventListener('click', leftToRightAll); 
   buttonRight.addEventListener('click', leftToRight);
 
@@ -142,7 +147,51 @@ function createControl(itemsData){
   const buttonDubleUpSe = document.querySelector('.button-doubUp-s');
   const buttonDownSe = document.querySelector('.button-down-s');
   const buttonDubleDownSe = document.querySelector('.button-doubDown-s');
+  buttonUpSe.addEventListener('click', () => upQueue(contenerSelect));
+  buttonDubleUpSe.addEventListener('click',() => upQueueToFirst(contenerSelect));
+  buttonDownSe.addEventListener('click',() => downQueue(contenerSelect));
+  buttonDubleDownSe.addEventListener('click',() => downQueueToFirst(contenerSelect));
+  
+  function getElemBySearch(inputSearch,contener, ulSelec, liSelec){
+    let searchValue = inputSearch.value.toLowerCase();
+    let countToDel = searchElemArr.length;
+    
+    if (searchElemArr.length === 0){
+      countToDel = contener.length;
+    }
 
+    let getUl = document.querySelector(`.${ulSelec}`);
+    console.log(getUl);
+
+    for (let i = 0; i < countToDel; ++i){
+      let elem = document.querySelector(`.${liSelec}`);
+      getUl.removeChild(elem);
+    }
+
+    searchElemArr.splice(0, searchElemArr.length);
+
+    for (let i = 0; i < contener.length; ++i){
+      let test = hasChar(contener[i].name, searchValue)
+      if (test === true){
+        searchElemArr.push(contener[i]);    
+      }
+    }
+
+    if (ulSelec === 'itmes-available'){
+      fillAvaliableItems(searchElemArr);
+    }
+    else{
+      for (let i = 0; i < searchElemArr.length; ++i){
+        fillSelectedItems(searchElemArr, i);
+        console.log(searchElemArr);
+      }
+    }
+
+  }
+
+  function hasChar(str, char) {
+      return str.includes(char)
+  }
 
   for (let i = 0; i < itemsData.lengthObj; ++i){
     contenerAvaliable[i] = itemsData['item' + (i + 1)];
@@ -156,15 +205,16 @@ function createControl(itemsData){
       <span class="items__text">${contener.name}</span>`
   }
   
-  function fillAvaliableItems(index = null){
+  function fillAvaliableItems(contener,index = null){
     let getUl = document.querySelector('.itmes-available');
 
     if (index === null){
-      for (let i = 0; i < contenerAvaliable.length; ++i){
+      for (let i = 0; i < contener.length; ++i){
+        console.log(contener.length);
         let createElemLi = document.createElement('li');
         createElemLi.classList.add('items-li');
         createElemLi.classList.add('li-a');
-        createElemLi.innerHTML = fillElem(contenerAvaliable[i]);
+        createElemLi.innerHTML = fillElem(contener[i]);
         createElemLi.addEventListener('click', function(){
           document.querySelectorAll(".items-li").forEach((itemLi) => { itemLi.classList.remove("active"); });
           createElemLi.classList.add("active");
@@ -176,7 +226,7 @@ function createControl(itemsData){
       let createElemLi = document.createElement('li');
       createElemLi.classList.add('items-li');
       createElemLi.classList.add('li-a');
-      createElemLi.innerHTML = fillElem(contenerAvaliable[index]);
+      createElemLi.innerHTML = fillElem(contener[index]);
       createElemLi.addEventListener('click', function(){
         document.querySelectorAll(".items-li").forEach((itemLi) => { itemLi.classList.remove("active"); });
         createElemLi.classList.add("active");
@@ -185,15 +235,15 @@ function createControl(itemsData){
     }
   }
 
-  fillAvaliableItems();
+  fillAvaliableItems(contenerAvaliable);
 
-  function fillSelectedItems(index){
+  function fillSelectedItems(contener,index){
     let getUl = document.querySelector('.itmes-selected');
   
     let createElemLi = document.createElement('li');
     createElemLi.classList.add('items-li');
     createElemLi.classList.add('li-s');
-    createElemLi.innerHTML = fillElem(contenerSelect[index]);
+    createElemLi.innerHTML = fillElem(contener[index]);
     createElemLi.addEventListener('click', function(){
       document.querySelectorAll(".items-li").forEach((itemLi) => { itemLi.classList.remove("active"); });
       createElemLi.classList.add("active");
@@ -202,20 +252,20 @@ function createControl(itemsData){
     
   }
 
-  function upQueue(){
+  function upQueue(contener){
     let elemet = document.querySelector('.active');
-    let aboveElemet = elemet.previousSibling;
-
-    if (elemet === null && aboveElemet === null){
+    if (elemet === null){
       return;
     }
 
-    for (let i = 0; i < contenerAvaliable.length; ++i){
-      if (contenerAvaliable[i].name === elemet.lastElementChild.innerHTML && i != 0){
+    let aboveElemet = elemet.previousSibling;
+    
+    for (let i = 0; i < contener.length; ++i){
+      if (contener[i].name === elemet.lastElementChild.innerHTML && i != 0){
         let oldElemet = elemet.innerHTML;
-        let oldAbovePosition = contenerAvaliable[i - 1];
-        contenerAvaliable[i - 1] = contenerAvaliable[i]; 
-        contenerAvaliable[i] = oldAbovePosition;
+        let oldAbovePosition = contener[i - 1];
+        contener[i - 1] = contener[i]; 
+        contener[i] = oldAbovePosition;
         elemet.innerHTML = aboveElemet.innerHTML;
         aboveElemet.innerHTML = oldElemet;
         elemet.classList.remove("active");
@@ -224,24 +274,24 @@ function createControl(itemsData){
     }
   }
 
-  function upQueueToFirst(){
+  function upQueueToFirst(contener){
     let elemet = document.querySelector('.active');
     if (elemet === null){
       return;
     }
 
-    for (let i = 0; i < contenerAvaliable.length; ++i){
-      if (contenerAvaliable[i].name === elemet.lastElementChild.innerHTML && i != 0){
-        let temp = contenerAvaliable[i];
+    for (let i = 0; i < contener.length; ++i){
+      if (contener[i].name === elemet.lastElementChild.innerHTML && i != 0){
+        let temp = contener[i];
 
         for (let j = i; j > 0; --j){
-          contenerAvaliable[j] = contenerAvaliable[j - 1];
+          contener[j] = contener[j - 1];
         }
-        contenerAvaliable[0] = temp;
+        contener[0] = temp;
         
-        for (let k = 0; k < contenerAvaliable.length; ++k){
+        for (let k = 0; k < contener.length; ++k){
           let liElement = document.querySelectorAll(".items-li")[k];
-          let data = fillElem(contenerAvaliable[k]);
+          let data = fillElem(contener[k]);
           liElement.innerHTML = data;
           liElement.classList.remove('active');
         }
@@ -250,21 +300,21 @@ function createControl(itemsData){
     }
   }
   
-  function downQueue(){
+  function downQueue(contener){
     let elemet = document.querySelector('.active');
-    let belowElemet = elemet.nextSibling;
-
-    if (elemet === null && belowElemet === null){
+    if (elemet === null){
       return;
     }
 
-    for (let i = 0; i < contenerAvaliable.length; ++i){
-      if (contenerAvaliable[i].name === elemet.lastElementChild.innerHTML && i != contenerAvaliable.length - 1){
+    let belowElemet = elemet.nextSibling;
+    
+    for (let i = 0; i < contener.length; ++i){
+      if (contener[i].name === elemet.lastElementChild.innerHTML && i != contener.length - 1){
         let oldElemet = elemet.innerHTML;
-        let oldBelowPosition = contenerAvaliable[i + 1];
+        let oldBelowPosition = contener[i + 1];
 
-        contenerAvaliable[i + 1] = contenerAvaliable[i]
-        contenerAvaliable[i] = oldBelowPosition;
+        contener[i + 1] = contener[i]
+        contener[i] = oldBelowPosition;
         elemet.innerHTML = belowElemet.innerHTML;
         belowElemet.innerHTML = oldElemet;
         elemet.classList.remove("active");
@@ -274,24 +324,24 @@ function createControl(itemsData){
 
   }
 
-  function downQueueToFirst(){
+  function downQueueToFirst(contener){
     let elemet = document.querySelector('.active');
     if (elemet === null){
       return;
     }
 
-    for (let i = 0; i < contenerAvaliable.length; ++i){
-      if (contenerAvaliable[i].name === elemet.lastElementChild.innerHTML && i != contenerAvaliable.length - 1){
-        let temp = contenerAvaliable[i];
+    for (let i = 0; i < contener.length; ++i){
+      if (contener[i].name === elemet.lastElementChild.innerHTML && i != contener.length - 1){
+        let temp = contener[i];
 
-        for (let j = i; j < contenerAvaliable.length - i; ++j){
-          contenerAvaliable[j] = contenerAvaliable[j + 1];
+        for (let j = i; j < contener.length - i; ++j){
+          contener[j] = contener[j + 1];
         }
-        contenerAvaliable[contenerAvaliable.length - 1] = temp
+        contener[contener.length - 1] = temp
         
-        for (let k = 0; k < contenerAvaliable.length; ++k){
+        for (let k = 0; k < contener.length; ++k){
           let liElement = document.querySelectorAll(".items-li")[k];
-          let data = fillElem(contenerAvaliable[k]);
+          let data = fillElem(contener[k]);
           liElement.innerHTML = data;
           liElement.classList.remove('active');
         }
@@ -311,7 +361,7 @@ function createControl(itemsData){
       if (contenerAvaliable[i].name === elemet.lastElementChild.innerHTML){
         contenerSelect.push(contenerAvaliable[i]);
         contenerAvaliable.splice(i, 1);
-        fillSelectedItems(contenerSelect.length - 1);
+        fillSelectedItems(contenerSelect,contenerSelect.length - 1);
         perentUl.removeChild(elemet);
         return;
       }
@@ -329,7 +379,7 @@ function createControl(itemsData){
       if (contenerSelect[i].name === elemet.lastElementChild.innerHTML){
         contenerAvaliable.push(contenerSelect[i]);
         contenerSelect.splice(i, 1);   
-        fillAvaliableItems(contenerAvaliable.length - 1);
+        fillAvaliableItems(contenerAvaliable,contenerAvaliable.length - 1);
         perentUl.removeChild(elemet);
         return;
       }
@@ -341,7 +391,7 @@ function createControl(itemsData){
     for (let i = 0; i < contenerAvaliable.length; ++i){
       let elemet = document.querySelector('.li-a');
       contenerSelect.push(contenerAvaliable[i]);
-      fillSelectedItems(i); 
+      fillSelectedItems(contenerSelect,i); 
       getUl.removeChild(elemet)
     }
     contenerAvaliable.splice(0, contenerAvaliable.length);
@@ -354,7 +404,7 @@ function createControl(itemsData){
       contenerAvaliable.push(contenerSelect[i]);
       getUl.removeChild(elemet)
     }
-    fillAvaliableItems(); 
+    fillAvaliableItems(contenerAvaliable); 
     contenerSelect.splice(0, contenerSelect.length);
   }
 }
