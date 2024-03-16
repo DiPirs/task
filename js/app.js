@@ -1,4 +1,4 @@
-const itemsData = {
+const itemsData = new Control({
   lengthObj : 7,
   item1 : {
     name : 'bamboo-watch',
@@ -28,9 +28,10 @@ const itemsData = {
     name : 'game-controller',
     img : './images/game-controller.jpg'
   }
-}
+})
 
-function createControl(itemsData){
+function Control(itemsData){
+  this.itemsData = itemsData;
   const leftSide =
   `<div class="contener contener-available">
     <div class="contener__buttons">
@@ -425,5 +426,3 @@ function createControl(itemsData){
     }
   }
 }
-
-createControl(itemsData);
