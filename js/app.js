@@ -192,11 +192,13 @@ function Control(itemsData){
     }
 
     if (ulSelec === 'itmes-available'){
-      fillItems(searchElemArr);
+      for (let i = 0; i < searchElemArr.length; ++i){
+        fillItems(searchElemArr, i, 'li-a');
+      }
     }
     else{
       for (let i = 0; i < searchElemArr.length; ++i){
-        fillItems(searchElemArr, i);
+        fillItems(searchElemArr, i, 'li-s');
       }
     }
 
