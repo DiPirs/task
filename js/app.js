@@ -1,67 +1,35 @@
-const itemsData = new Control({
-  lengthObj : 7,
-  item1 : {
-    name : 'bamboo-watch',
-    img : './images/bamboo-watch.jpg'
-  }, 
-  item2 : {
-    name : 'black-watch',
-    img : './images/black-watch.jpg'
-  },
-  item3 : {
-    name : 'blue-band',
-    img : './images/blue-band.jpg'
-  },
-  item4 : {
-    name : 'blue-t-shirt',
-    img : './images/blue-t-shirt.jpg'
-  },
-  item5 : {
-    name : 'bracelet',
-    img : './images/bracelet.jpg'
-  },
-  item6 : {
-    name : 'brown-purse',
-    img : './images/brown-purse.jpg'
-  },
-  item7 : {
-    name : 'game-controller',
-    img : './images/game-controller.jpg'
-  }
-})
-
 function Control(itemsData){
   this.itemsData = itemsData;
   const leftSide =
-  `<div class="contener contener-available">
-    <div class="contener__buttons">
-      <ul class="buttons__items">
-          <button class="buttons-item button-up-a">
-            <img src="./icons/up.svg" alt="Up to 1 step" class="button-img img-up">
-          </button>
-          <button class="buttons-item button-doubUp-a">
-            <img src="./icons/doubleUp.svg" alt="Up to first position" class="button-img img-dobUp">
-          </button>
-          <button class="buttons-item button-doubDown-a">
-            <img src="./icons/doubleDown.svg" alt="Down to last position" class="button-img img-dobDwn">
-          </button>
-          <button class="buttons-item button-down-a" >
-            <img src="./icons/down.svg" alt="Down to 1 step" class="button-img img-dwn">
-          </button>
-      </ul>
-    </div>
-    <div class="contener__block">
-      <h1 class="block__header">Available</h1>
-      <hr/>
-      <div class="block__search">
-        <input type="text" placeholder="Search item" class="search-input input-available">
+    `<div class="contener contener-available">
+      <div class="contener__buttons">
+        <ul class="buttons__items">
+            <button class="buttons-item button-up-a">
+              <img src="./icons/up.svg" alt="Up to 1 step" class="button-img img-up">
+            </button>
+            <button class="buttons-item button-doubUp-a">
+              <img src="./icons/doubleUp.svg" alt="Up to first position" class="button-img img-dobUp">
+            </button>
+            <button class="buttons-item button-doubDown-a">
+              <img src="./icons/doubleDown.svg" alt="Down to last position" class="button-img img-dobDwn">
+            </button>
+            <button class="buttons-item button-down-a" >
+              <img src="./icons/down.svg" alt="Down to 1 step" class="button-img img-dwn">
+            </button>
+        </ul>
       </div>
-      <hr/>
-      <div class="contener_block__items">
-        <ul class="block__items itmes-available"></ul>
+      <div class="contener__block">
+        <h1 class="block__header">Available</h1>
+        <hr/>
+        <div class="block__search">
+          <input type="text" placeholder="Search item" class="search-input input-available">
+        </div>
+        <hr/>
+        <div class="contener_block__items">
+          <ul class="block__items itmes-available"></ul>
+        </div>
       </div>
-    </div>
-  </div>`;
+    </div>`;
 
   const centerSide = 
     `<div class="contener contener-centerButtons">
@@ -115,56 +83,14 @@ function Control(itemsData){
         </ul>
       </div>
     </div>`;
-
-  const wrapper = document.querySelector('.control__wrapper');
-  wrapper.innerHTML = leftSide + centerSide + rigthSide;
-
-  let contenerAvaliable = [];
-  let contenerSelect = [];
-  let searchElemArr = [];
-
-  const inputSearchAvailable = document.querySelector('.input-available');
-  const inputSearchSelected = document.querySelector('.input-selected');
-  inputSearchAvailable.addEventListener('input', () => getElemBySearch(inputSearchAvailable,contenerAvaliable, 'itmes-available', 'li-a'));
-  inputSearchSelected.addEventListener('input', () => getElemBySearch(inputSearchSelected,contenerSelect, 'itmes-selected', 'li-s'));
-
-  const buttonUpAv = document.querySelector('.button-up-a');
-  const buttonDubleUpAv = document.querySelector('.button-doubUp-a');
-  const buttonDownAv = document.querySelector('.button-down-a');
-  const buttonDubleDownAv = document.querySelector('.button-doubDown-a');
-  buttonUpAv.addEventListener('click', () => upQueue(contenerAvaliable));
-  buttonDubleUpAv.addEventListener('click',() => upQueueToFirst(contenerAvaliable));
-  buttonDownAv.addEventListener('click', () => downQueue(contenerAvaliable));
-  buttonDubleDownAv.addEventListener('click', () => downQueueToFirst(contenerAvaliable));
-
-  const buttonLeft = document.querySelector('.button-left');
-  const buttonDubleLeft = document.querySelector('.button-doubLeft');
-  const buttonDubleRight = document.querySelector('.button-doubRight');
-  const buttonRight = document.querySelector('.button-right');
-  buttonLeft.addEventListener('click', rightToLeft); 
-  buttonDubleLeft.addEventListener('click', rightToLeftAll);
-  buttonDubleRight.addEventListener('click', leftToRightAll); 
-  buttonRight.addEventListener('click', leftToRight);
-
-  const buttonReset = document.querySelector('.button-reset');
-  const buttonRanom = document.querySelector('.button-random');
-  buttonReset.addEventListener('click', resetAll); 
-  buttonRanom.addEventListener('click', randItem); 
-
-  const buttonUpSe = document.querySelector('.button-up-s');
-  const buttonDubleUpSe = document.querySelector('.button-doubUp-s');
-  const buttonDownSe = document.querySelector('.button-down-s');
-  const buttonDubleDownSe = document.querySelector('.button-doubDown-s');
-  buttonUpSe.addEventListener('click', () => upQueue(contenerSelect));
-  buttonDubleUpSe.addEventListener('click',() => upQueueToFirst(contenerSelect));
-  buttonDownSe.addEventListener('click',() => downQueue(contenerSelect));
-  buttonDubleDownSe.addEventListener('click',() => downQueueToFirst(contenerSelect));
   
-  for (let i = 0; i < itemsData.lengthObj; ++i){
-    contenerAvaliable[i] = itemsData['item' + (i + 1)];
-    fillItems(contenerAvaliable, i, 'li-a');
+  function startFillBlock() {
+    for (let i = 0; i < itemsData.lengthObj; ++i){
+      contenerAvaliable[i] = itemsData['item' + (i + 1)];
+      fillItems(contenerAvaliable, i, 'li-a');
+    }
   }
-
+    
   function getElemBySearch(inputSearch,contener, ulSelec, liSelec){
     let searchValue = inputSearch.value.toLowerCase();
     let countToDel = searchElemArr.length;
@@ -308,7 +234,7 @@ function Control(itemsData){
 
   }
 
-  function downQueueToFirst(contener){
+  function downQueueToLast(contener){
     let elemet = document.querySelector('.active');
     if (elemet === null){
       return;
@@ -414,9 +340,87 @@ function Control(itemsData){
 		}
     contenerAvaliable = [];
     contenerSelect = [];
-    for (let i = 0; i < itemsData.lengthObj; ++i){
-      contenerAvaliable[i] = itemsData['item' + (i + 1)];
-      fillItems(contenerAvaliable, i, 'li-a');
-    }
+    startFillBlock();
   }
+
+  const wrapper = document.querySelector('.control__wrapper');
+  wrapper.innerHTML = leftSide + centerSide + rigthSide;
+  
+  let contenerAvaliable = [];
+  let contenerSelect = [];
+  let searchElemArr = [];
+  
+  startFillBlock();
+
+  // inputs
+  const inputSearchAvailable = document.querySelector('.input-available');
+  const inputSearchSelected = document.querySelector('.input-selected');
+  inputSearchAvailable.addEventListener('input', () => getElemBySearch(inputSearchAvailable,contenerAvaliable, 'itmes-available', 'li-a'));
+  inputSearchSelected.addEventListener('input', () => getElemBySearch(inputSearchSelected,contenerSelect, 'itmes-selected', 'li-s'));
+
+  // buttons Available
+  const buttonUpAv = document.querySelector('.button-up-a');
+  const buttonDubleUpAv = document.querySelector('.button-doubUp-a');
+  const buttonDownAv = document.querySelector('.button-down-a');
+  const buttonDubleDownAv = document.querySelector('.button-doubDown-a');
+  buttonUpAv.addEventListener('click', () => upQueue(contenerAvaliable));
+  buttonDubleUpAv.addEventListener('click',() => upQueueToFirst(contenerAvaliable));
+  buttonDownAv.addEventListener('click', () => downQueue(contenerAvaliable));
+  buttonDubleDownAv.addEventListener('click', () => downQueueToLast(contenerAvaliable));
+
+  // center buttons
+  const buttonLeft = document.querySelector('.button-left');
+  const buttonDubleLeft = document.querySelector('.button-doubLeft');
+  const buttonDubleRight = document.querySelector('.button-doubRight');
+  const buttonRight = document.querySelector('.button-right');
+  const buttonReset = document.querySelector('.button-reset');
+  const buttonRanom = document.querySelector('.button-random');
+  buttonLeft.addEventListener('click', rightToLeft); 
+  buttonDubleLeft.addEventListener('click', rightToLeftAll);
+  buttonDubleRight.addEventListener('click', leftToRightAll); 
+  buttonRight.addEventListener('click', leftToRight);
+  buttonReset.addEventListener('click', resetAll); 
+  buttonRanom.addEventListener('click', randItem); 
+
+  // buttons Selected
+  const buttonUpSe = document.querySelector('.button-up-s');
+  const buttonDubleUpSe = document.querySelector('.button-doubUp-s');
+  const buttonDownSe = document.querySelector('.button-down-s');
+  const buttonDubleDownSe = document.querySelector('.button-doubDown-s');
+  buttonUpSe.addEventListener('click', () => upQueue(contenerSelect));
+  buttonDubleUpSe.addEventListener('click',() => upQueueToFirst(contenerSelect));
+  buttonDownSe.addEventListener('click',() => downQueue(contenerSelect));
+  buttonDubleDownSe.addEventListener('click',() => downQueueToLast(contenerSelect));
 }
+
+const itemsData = new Control({
+  lengthObj : 7,
+  item1 : {
+    name : 'bamboo-watch',
+    img : './images/bamboo-watch.jpg'
+  }, 
+  item2 : {
+    name : 'black-watch',
+    img : './images/black-watch.jpg'
+  },
+  item3 : {
+    name : 'blue-band',
+    img : './images/blue-band.jpg'
+  },
+  item4 : {
+    name : 'blue-t-shirt',
+    img : './images/blue-t-shirt.jpg'
+  },
+  item5 : {
+    name : 'bracelet',
+    img : './images/bracelet.jpg'
+  },
+  item6 : {
+    name : 'brown-purse',
+    img : './images/brown-purse.jpg'
+  },
+  item7 : {
+    name : 'game-controller',
+    img : './images/game-controller.jpg'
+  }
+})
